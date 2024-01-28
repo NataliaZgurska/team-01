@@ -9,6 +9,8 @@ const list = document.querySelector('#task-list');
 
 form.addEventListener('submit', onBtnSubmit);
 
+restoreData();
+
 function onBtnSubmit(e) {
   e.preventDefault();
   const inputEl = e.target.taskName.value;
@@ -20,7 +22,7 @@ function onBtnSubmit(e) {
 console.log(infoItemLocalStorage() || []);
 
 function addSingleTask(value) {
-  const arrItem = infoItemLocalStorage() || [];
+  const arrItem = infoItemLocalStorage(TASKS_KEY) || [];
   const item = document.createElement('li');
   item.textContent = value;
   list.append(item);
@@ -34,4 +36,11 @@ function addItemLocalStorage(key, item) {
 
 function infoItemLocalStorage(key) {
   return JSON.parse(localStorage.getItem(key));
+}
+
+function restoreData() {
+    const data = infoItemLocalStorage(TASKS_KEY);
+    if (!data) return;
+    const dataLi = data.map(elem => `<li>${elem}</li>`).join('');
+    list.insertAdjacentHTML('beforeend', dataLi);
 }
