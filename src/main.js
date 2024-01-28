@@ -1,6 +1,7 @@
 // Напиши функціонал додавання задач в список, при сабміті форми задача повинна додаватись в дом дерево, та сховище.
 // При перезавантаженні сторінки, список повинен відображатись одразу
 // Реалізувати функціонал видалення елементів зі списку при натисканні на кнопку видалити
+import { nanoid } from 'nanoid';
 
 const TASKS_KEY = 'TASKS_KEY';
 
@@ -8,25 +9,29 @@ const form = document.querySelector('#task-form');
 const list = document.querySelector('#task-list');
 
 form.addEventListener('submit', onBtnSubmit);
+list.addEventListener('click', removeItem);
 
 restoreData();
 
 function onBtnSubmit(e) {
   e.preventDefault();
   const inputEl = e.target.taskName.value;
-  console.log(inputEl);
   addSingleTask(inputEl);
   e.target.reset();
 }
 
-console.log(infoItemLocalStorage() || []);
-
 function addSingleTask(value) {
   const arrItem = infoItemLocalStorage(TASKS_KEY) || [];
+  const ID = nanoid();
   const item = document.createElement('li');
+  const button = document.createElement('button');
+  button.textContent = ' X';
   item.textContent = value;
+  item.appendChild(button);
+  button.setAttribute('type', 'button');
   list.append(item);
-  arrItem.push(value);
+  item.setAttribute('id', `${ID}`);
+  arrItem.push({ ID, value });
   addItemLocalStorage(TASKS_KEY, arrItem);
 }
 
@@ -39,8 +44,23 @@ function infoItemLocalStorage(key) {
 }
 
 function restoreData() {
-    const data = infoItemLocalStorage(TASKS_KEY);
-    if (!data) return;
-    const dataLi = data.map(elem => `<li>${elem}</li>`).join('');
-    list.insertAdjacentHTML('beforeend', dataLi);
+  const data = infoItemLocalStorage(TASKS_KEY);
+  if (!data) return;
+  const dataLi = data
+    .map(
+      elem =>
+        `<li id = "${elem.ID}">${elem.value} <button type = "button">X</button></li>`
+    )
+    .join('');
+  list.insertAdjacentHTML('beforeend', dataLi);
+}
+
+function removeItem(event) {
+  if (event.target.nodeName === 'BUTTON') {
+    const idItem = event.target.parentNode.getAttribute('id');
+    event.target.parentNode.remove();
+    const dataArr = infoItemLocalStorage(TASKS_KEY);
+    const newArr = dataArr.filter(item => item.ID !== idItem);
+    addItemLocalStorage(TASKS_KEY, newArr);
+  }
 }
