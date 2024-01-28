@@ -1,12 +1,14 @@
 // Напиши функціонал додавання задач в список, при сабміті форми задача повинна додаватись в дом дерево, та сховище.
 // При перезавантаженні сторінки, список повинен відображатись одразу
 // Реалізувати функціонал видалення елементів зі списку при натисканні на кнопку видалити
-import { nanoid } from 'nanoid';
 
+import { nanoid } from 'nanoid';
+import { addItemLocalStorage, infoItemLocalStorage } from './js/storage'
+import refs from './js/refs';
+
+const { form, list } = refs;
 const TASKS_KEY = 'TASKS_KEY';
 
-const form = document.querySelector('#task-form');
-const list = document.querySelector('#task-list');
 
 form.addEventListener('submit', onBtnSubmit);
 list.addEventListener('click', removeItem);
@@ -35,13 +37,7 @@ function addSingleTask(value) {
   addItemLocalStorage(TASKS_KEY, arrItem);
 }
 
-function addItemLocalStorage(key, item) {
-  localStorage.setItem(key, JSON.stringify(item));
-}
 
-function infoItemLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
-}
 
 function restoreData() {
   const data = infoItemLocalStorage(TASKS_KEY);
