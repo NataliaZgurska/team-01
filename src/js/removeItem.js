@@ -1,5 +1,5 @@
 import refs from "./refs";
-import {TASKS_KEY} from '../main';
+import {TASKS_KEY} from './constans';
 import { addItemLocalStorage, infoItemLocalStorage } from './storage';
 
 refs.list.addEventListener('click', removeItem);
