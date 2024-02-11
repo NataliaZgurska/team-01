@@ -5,13 +5,15 @@
 import { nanoid } from 'nanoid';
 import { addItemLocalStorage, infoItemLocalStorage } from './js/storage'
 import refs from './js/refs';
+import './js/removeItem';
+
 
 const { form, list } = refs;
-const TASKS_KEY = 'TASKS_KEY';
+export const TASKS_KEY = 'TASKS_KEY';
 
 
 form.addEventListener('submit', onBtnSubmit);
-list.addEventListener('click', removeItem);
+
 
 restoreData();
 
@@ -27,10 +29,11 @@ function addSingleTask(value) {
   const ID = nanoid();
   const item = document.createElement('li');
   const button = document.createElement('button');
-  button.textContent = ' X';
+  button.textContent = 'X';
   item.textContent = value;
   item.appendChild(button);
   button.setAttribute('type', 'button');
+  console.log('rfkzkf');
   list.append(item);
   item.setAttribute('id', `${ID}`);
   arrItem.push({ ID, value });
@@ -51,12 +54,3 @@ function restoreData() {
   list.insertAdjacentHTML('beforeend', dataLi);
 }
 
-function removeItem(event) {
-  if (event.target.nodeName === 'BUTTON') {
-    const idItem = event.target.parentNode.getAttribute('id');
-    event.target.parentNode.remove();
-    const dataArr = infoItemLocalStorage(TASKS_KEY);
-    const newArr = dataArr.filter(item => item.ID !== idItem);
-    addItemLocalStorage(TASKS_KEY, newArr);
-  }
-}
